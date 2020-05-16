@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirate Books</title>
+    <link href="https://fonts.googleapis.com/css2?family=Macondo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <h1>Hello Comrades,</h1> 
+    <h2>Welcome to PirateBooks</h2>
+    <p>Here You can Download all the books out there in the internet</p>
+    <br/>
+    <a class="take-me-there" href="{% url 'search' %}">Take me there!</a>
+    <br/><br/><br/>
+    <a class="take-me-there" href="{% url 'submit' %}">Submit your books!</a>
+</body>
+</html>
