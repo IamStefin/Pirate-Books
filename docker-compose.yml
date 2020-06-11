@@ -1,0 +1,37 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./database:/var/lib/postgresql/data
+  website:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: >
+      sh -c "python manage.py wait_for_database &&
+             python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py collectstatic --no-input &&
+             gunicorn PirateBooks.wsgi -b :8000"
+    depends_on:
+      - db
+  nginxweb:
+    image: nginx:latest
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/logs/access.log:/var/log/nginx/access.log
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./media:/media
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - db
