@@ -1,0 +1,31 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: media
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+    - web
+  routes:
+  - match: Host(`localhost`) && PathPrefix(`/books`)
+    kind: Rule
+    services:
+    - name: media-cluster-ip-service
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: home
+  namespace: default
+spec:
+  entryPoints:
+    - websecure
+    - web
+  routes:
+  - match: Host(`localhost`)
+    kind: Rule
+    services:
+    - name: django-deployment-cluster-ip-service
+      port: 8000

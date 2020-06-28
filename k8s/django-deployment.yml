@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: django-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: django
+  template:
+    metadata:
+      labels:
+        component: django
+    spec:
+      volumes:
+        - name: media-storage
+          persistentVolumeClaim:
+            claimName: media-persistent-volume-claim
+      containers:
+        - name: django
+          image: iamstefin/piratebooks
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: media-storage
+              mountPath: /app/media/books
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
